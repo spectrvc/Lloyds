@@ -1,0 +1,62 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace 'com.art.data'
+    compileSdk libs.versions.compileSdk.get() as Integer
+
+    defaultConfig {
+        minSdk libs.versions.minSdk.get() as Integer
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = libs.versions.jvmTarget.get()
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+dependencies {
+
+    implementation project(path: ':domain')
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+
+    //for api/http
+    implementation libs.bundles.retrofit
+
+    //for DI (hilt)
+    implementation libs.hilt.android
+    ksp libs.hilt.compiler
+    implementation libs.androidx.compose.hilt.navigation
+
+    //for tests
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.engine
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.mockito.inline
+    testImplementation libs.kotlinx.coroutines.test
+}

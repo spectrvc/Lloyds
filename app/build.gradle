@@ -1,0 +1,98 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    id 'dagger.hilt.android.plugin'
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace libs.versions.applicationId.get()
+    compileSdk libs.versions.compileSdk.get() as Integer
+
+    defaultConfig {
+        applicationId libs.versions.applicationId.get()
+        minSdk libs.versions.minSdk.get() as Integer
+        targetSdk libs.versions.targetSdk.get() as Integer
+        versionCode libs.versions.appVersionCode.get() as Integer
+        versionName libs.versions.appVersionName.get()
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = libs.versions.jvmTarget.get()
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.kotlinCompiler.get()
+    }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+dependencies {
+
+    //modules of app
+    implementation project(path: ':domain')
+    implementation project(path: ':data')
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.compose.activity
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.graphics
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.material
+
+    //for ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    //coroutines
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
+
+    //for drawer (main menu)
+    implementation libs.androidx.compose.navigation
+
+    //for DI (hilt)
+    implementation libs.hilt.android
+    ksp libs.hilt.compiler
+    implementation libs.androidx.compose.hilt.navigation
+
+    //for gson in navigation
+    implementation libs.gson
+
+    //for images
+    implementation libs.coil.compose
+
+    //for api/http
+    implementation libs.bundles.retrofit
+
+    //for tests
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.engine
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.mockito.inline
+    testImplementation libs.kotlinx.coroutines.test
+}

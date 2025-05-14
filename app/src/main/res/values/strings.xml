@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lloyds assessment</string>
+    <string name="button_back">Back</string>
+    <string name="button_get_product_list">Get product list</string>
+    <string name="menu_about">About</string>
+    <string name="menu_home">Home</string>
+    <string name="product_category">Category</string>
+    <string name="product_id">Id</string>
+    <string name="product_price">Price</string>
+</resources>
